@@ -85,7 +85,7 @@
       (if-let [result-transform (if (keyword? result-transform-fn)
                                   (get-in (state/sub-config) [:query/result-transforms result-transform-fn])
                                   result-transform-fn)]
-        (if-let [f (sci/eval-string (pr-str result-transform))]
+        (if-let [f (sci/eval-string (pr-str result-transform) {})]
           (try
             (sci/call-fn f result)
             (catch :default e
@@ -138,8 +138,8 @@
           current-block-uuid (:current-block-uuid query-opts)
           resolved-inputs (mapv #(resolve-input % current-block-uuid) inputs)
           inputs (cond-> resolved-inputs
-                         rules
-                         (conj rules))
+                   rules
+                   (conj rules))
           repo (or repo (state/get-current-repo))
           k [:custom (or (:query-string query') query')]]
       (pprint "inputs (post-resolution):" resolved-inputs)

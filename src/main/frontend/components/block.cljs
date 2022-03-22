@@ -78,7 +78,28 @@
             [promesa.core :as p]
             [reitit.frontend.easy :as rfe]
             [rum.core :as rum]
-            [shadow.loader :as loader]))
+            [frontend.handler.file-sync :as file-sync]
+            [clojure.set :as set]
+            [shadow.loader :as loader]
+            [sci.core :as scic]
+            [frontend.handler.notification :as notification]))
+
+(def fns (scic/create-ns 'editor-ns nil))
+(def editor-ns {'open-block-in-sidebar (scic/copy-var editor-handler/open-block-in-sidebar! fns)
+                'set-block-property (scic/copy-var editor-handler/set-block-property! fns)
+                'evalue (scic/copy-var util/evalue fns)
+                'format (scic/copy-var util/format fns)
+                'fetch (scic/copy-var util/fetch fns)
+                'post (scic/copy-var util/post fns)
+                'debounce (scic/copy-var util/debounce fns)
+                'stop (scic/copy-var util/stop fns)
+                'stop-propagation (scic/copy-var util/stop-propagation fns)
+                'scroll-to-element (scic/copy-var util/scroll-to-element fns)
+                'scroll-to (scic/copy-var util/scroll-to fns)
+                'scroll-to-top (scic/copy-var util/scroll-to-top fns)
+                'copy-to-clipboard (scic/copy-var util/copy-to-clipboard! fns)
+                'uuid (scic/copy-var uuid fns)
+                'notify (scic/copy-var notification/show! fns)})
 
 (defn safe-read-string
   ([s]
@@ -1233,7 +1254,7 @@
                            (common-handler/safe-read-string "failed to parse function")
                            (query-handler/normalize-query-function query-result)
                            (str))
-             f (sci/eval-string fn-string)]
+             f (sci/eval-string fn-string {'editor editor-ns})]
          (when (fn? f)
            (try (f query-result)
                 (catch :default e
@@ -3078,7 +3099,7 @@
         _ (when-let [query-result (:query-result config)]
             (let [result (remove (fn [b] (some? (get-in b [:block/properties :template]))) result)]
               (reset! query-result result)))
-        view-f (and view-fn (sci/eval-string (pr-str view-fn)))
+        view-f (and view-fn (sci/eval-string (pr-str view-fn) {'editor editor-ns}))
         only-blocks? (:block/uuid (first result))
         blocks-grouped-by-page? (and (seq result)
                                      (not not-grouped-by-page?)

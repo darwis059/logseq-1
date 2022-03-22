@@ -11,6 +11,12 @@
 (defn average [coll]
   (/ (reduce + coll) (count coll)))
 
+(defn pp-str [result]
+  (remove nil? (for [record result]
+                 (if (map? record)
+                   (str (util/pp-str record) "\n")
+                   record))))
+
 (defn eval-string
   "Second arg is a map of options for sci/eval-string"
   ([s]

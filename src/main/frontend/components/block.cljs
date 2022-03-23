@@ -99,7 +99,9 @@
                 'scroll-to-top (scic/copy-var util/scroll-to-top fns)
                 'copy-to-clipboard (scic/copy-var util/copy-to-clipboard! fns)
                 'uuid (scic/copy-var uuid fns)
-                'notify (scic/copy-var notification/show! fns)})
+                'squuid (scic/copy-var d/squuid fns)
+                'notify (scic/copy-var notification/show! fns)
+                'code (scic/copy-var lazy-editor/editor fns)})
 
 (defn safe-read-string
   ([s]

@@ -1,6 +1,7 @@
 (ns frontend.extensions.sci
   (:require [sci.core :as sci]
             [frontend.util :as util]
+            [clojure.pprint]
             [goog.dom]
             [goog.object]
             [goog.string]))
@@ -29,7 +30,8 @@
                                                 'parseFloat js/parseFloat
                                                 'isNaN js/isNaN
                                                 'log js/console.log
-                                                'pprint util/pp-str}}
+                                                'pprint util/pp-str
+                                                'cl-format clojure.pprint/cl-format}}
                                     options))
      (catch :default e
        (println "Query: sci eval failed:")

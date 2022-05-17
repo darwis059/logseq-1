@@ -18,6 +18,8 @@
                    (str (util/pp-str record) "\n")
                    record))))
 
+(defn int-comma [n] (clojure.pprint/cl-format nil "~,,'.,3:d" n))
+
 (defn eval-string
   "Second arg is a map of options for sci/eval-string"
   ([s]
@@ -31,7 +33,8 @@
                                                 'isNaN js/isNaN
                                                 'log js/console.log
                                                 'pprint util/pp-str
-                                                'cl-format clojure.pprint/cl-format}}
+                                                'cl-format clojure.pprint/cl-format
+                                                'int-comma int-comma}}
                                     options))
      (catch :default e
        (println "Query: sci eval failed:")

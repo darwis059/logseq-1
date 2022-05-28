@@ -119,14 +119,14 @@ jobs:
       #   working-directory: ./static/js
 
       - name: Zip Js Files
-        run: zip logseq-js.zip ./js/* -r
+        run: zip logseq-js-${{ steps.ref.outputs.version }}.zip ./js/* -r
         working-directory: ./static
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: logseq-js.zip
-          path: ./static/logseq-js.zip
+      # - name: Upload Artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: logseq-js.zip
+      #     path: ./static/logseq-js.zip
 
       - name: Telegram Notify
         uses: appleboy/telegram-action@master
@@ -134,10 +134,18 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: Build Complete Logseq-js-${{ steps.ref.outputs.version }}
-          document: ./static/logseq-js.zip
+          document: ./static/logseq-js-${{ steps.ref.outputs.version }}.zip
+
+      - name: Upload File
+        id: upload
+        uses: JantHsueh/upload-file-action@master
+        with:
+          url: https://n8n.darwis.id/webhook/8752e9b8-734a-4f7e-927a-052d592504ce
+          forms: '{"fileName":"logseq-js-${{ steps.ref.outputs.version }}.zip"}'
+          fileForms: '{"data":"static/logseq-js-${{ steps.ref.outputs.version }}.zip"}'
 
       - name: Remove Js Zip
-        run: rm logseq-js.zip
+        run: rm logseq-js-${{ steps.ref.outputs.version }}.zip
         working-directory: ./static
 
       - name: Move static to public

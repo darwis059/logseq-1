@@ -1309,25 +1309,25 @@
   (when-let [url (first arguments)]
     (let [results (text-util/get-matched-video url)
           src (match results
-                     [_ _ _ (:or "youtube.com" "youtu.be" "y2u.be") _ id _]
-                     (if (= (count id) 11) ["youtube-player" id] url)
+                [_ _ _ (:or "youtube.com" "youtu.be" "y2u.be") _ id _]
+                (if (= (count id) 11) ["youtube-player" id] url)
 
-                     [_ _ _ "youtube-nocookie.com" _ id _]
-                     (str "https://www.youtube-nocookie.com/embed/" id)
+                [_ _ _ "youtube-nocookie.com" _ id _]
+                (str "https://www.youtube-nocookie.com/embed/" id)
 
-                     [_ _ _ "loom.com" _ id _]
-                     (str "https://www.loom.com/embed/" id)
+                [_ _ _ "loom.com" _ id _]
+                (str "https://www.loom.com/embed/" id)
 
-                     [_ _ _ (_ :guard #(string/ends-with? % "vimeo.com")) _ id _]
-                     (str "https://player.vimeo.com/video/" id)
+                [_ _ _ (_ :guard #(string/ends-with? % "vimeo.com")) _ id _]
+                (str "https://player.vimeo.com/video/" id)
 
                      [_ _ _ "bilibili.com" _ id & query]
                      (str "https://player.bilibili.com/player.html?bvid=" id "&high_quality=1"
                           (when-let [page (second query)]
                             (str "&page=" page)))
 
-                     :else
-                     url)]
+                :else
+                url)]
       (if (and (coll? src)
                (= (first src) "youtube-player"))
         (youtube/youtube-video (last src))
@@ -1530,50 +1530,50 @@
 (defn inline
   [{:keys [html-export?] :as config} item]
   (match item
-         [(:or "Plain" "Spaces") s]
-         s
+    [(:or "Plain" "Spaces") s]
+    s
 
-         ["Superscript" l]
-         (->elem :sup (map-inline config l))
-         ["Subscript" l]
-         (->elem :sub (map-inline config l))
+    ["Superscript" l]
+    (->elem :sup (map-inline config l))
+    ["Subscript" l]
+    (->elem :sub (map-inline config l))
 
-         ["Tag" _]
-         (when-let [s (gp-block/get-tag item)]
-           (let [s (text/page-ref-un-brackets! s)]
-             (page-cp (assoc config :tag? true) {:block/name s})))
+    ["Tag" _]
+    (when-let [s (gp-block/get-tag item)]
+      (let [s (text/page-ref-un-brackets! s)]
+        (page-cp (assoc config :tag? true) {:block/name s})))
 
-         ["Emphasis" [[kind] data]]
-         (emphasis-cp config kind data)
+    ["Emphasis" [[kind] data]]
+    (emphasis-cp config kind data)
 
          ["Entity" e]
          [:span {:dangerouslySetInnerHTML
                  {:__html (:html (security/sanitize-html e))}}]
 
-         ["Latex_Fragment" [display s]] ;display can be "Displayed" or "Inline"
-         (if html-export?
-           (latex/html-export s false true)
-           (latex/latex (str (d/squuid)) s false (not= display "Inline")))
+    ["Latex_Fragment" [display s]] ;display can be "Displayed" or "Inline"
+    (if html-export?
+      (latex/html-export s false true)
+      (latex/latex (str (d/squuid)) s false (not= display "Inline")))
 
-         [(:or "Target" "Radio_Target") s]
-         [:a {:id s} s]
+    [(:or "Target" "Radio_Target") s]
+    [:a {:id s} s]
 
-         ["Email" address]
-         (let [{:keys [local_part domain]} address
-               address (str local_part "@" domain)]
-           [:a {:href (str "mailto:" address)} address])
+    ["Email" address]
+    (let [{:keys [local_part domain]} address
+          address (str local_part "@" domain)]
+      [:a {:href (str "mailto:" address)} address])
 
-         ["Nested_link" link]
-         (nested-link config html-export? link)
+    ["Nested_link" link]
+    (nested-link config html-export? link)
 
-         ["Link" link]
-         (link-cp config html-export? link)
+    ["Link" link]
+    (link-cp config html-export? link)
 
-         [(:or "Verbatim" "Code") s]
-         [:code s]
+    [(:or "Verbatim" "Code") s]
+    [:code s]
 
-         ["Inline_Source_Block" x]
-         [:code (:code x)]
+    ["Inline_Source_Block" x]
+    [:code (:code x)]
 
          ["Export_Snippet" "html" s]
          (when (not html-export?)
@@ -1586,8 +1586,8 @@
           [:span {:dangerouslySetInnerHTML
                   {:__html (hiccup->html s)}}])
 
-         ["Inline_Html" s]
-         (when (not html-export?)
+    ["Inline_Html" s]
+    (when (not html-export?)
            ;; TODO: how to remove span and only export the content of `s`?
            [:span {:dangerouslySetInnerHTML {:__html (security/sanitize-html s)}}])
 

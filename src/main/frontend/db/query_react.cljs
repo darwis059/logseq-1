@@ -138,8 +138,8 @@
           current-block-uuid (:current-block-uuid query-opts)
           resolved-inputs (mapv #(resolve-input % current-block-uuid) inputs)
           inputs (cond-> resolved-inputs
-                   rules
-                   (conj rules))
+                         rules
+                         (conj rules))
           repo (or repo (state/get-current-repo))
           k [:custom (or (:query-string query') query')]]
       (pprint "inputs (post-resolution):" resolved-inputs)

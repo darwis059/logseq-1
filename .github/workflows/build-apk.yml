@@ -147,10 +147,10 @@ jobs:
           message: Build Complete Logseq-android-${{ steps.ref.outputs.version }}.apk
           document: builds/logseq-android-${{ steps.ref.outputs.version }}.apk
 
-      - name: Upload File
-        id: upload
-        uses: JantHsueh/upload-file-action@master
-        with:
-          url: https://n8n.darwis.id/webhook/8752e9b8-734a-4f7e-927a-052d592504ce
-          forms: '{"fileName":"logseq-android-${{ steps.ref.outputs.version }}.apk"}'
-          fileForms: '{"data":"builds/logseq-android-${{ steps.ref.outputs.version }}.apk"}'
+      # - name: Upload File
+      #   id: upload
+      #   uses: JantHsueh/upload-file-action@master
+      #   with:
+      #     url: https://n8n.darwis.id/webhook/8752e9b8-734a-4f7e-927a-052d592504ce
+      #     forms: '{"fileName":"logseq-android-${{ steps.ref.outputs.version }}.apk"}'
+      #     fileForms: '{"data":"builds/logseq-android-${{ steps.ref.outputs.version }}.apk"}'

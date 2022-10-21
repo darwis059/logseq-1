@@ -151,8 +151,8 @@ jobs:
       - name: Move static to public
         run: mv ./static ./public
 
-      - name: Remove workpsace folder
-        run: rm -r ./public/workspaces
+      # - name: Remove workpsace folder
+      #   run: rm -r ./public/workspaces
 
       - name: Modify Dockerfile 1
         run: echo "FROM nginx:stable-alpine" > Dockerfile

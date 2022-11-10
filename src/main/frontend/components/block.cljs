@@ -78,8 +78,8 @@
             [promesa.core :as p]
             [reitit.frontend.easy :as rfe]
             [rum.core :as rum]
-            [frontend.handler.file-sync :as file-sync]
-            [clojure.set :as set]
+            ;; [frontend.handler.file-sync :as file-sync]
+            ;; [clojure.set :as set]
             [shadow.loader :as loader]
             [sci.core :as scic]
             [frontend.handler.notification :as notification]))

@@ -1256,7 +1256,7 @@
                            (common-handler/safe-read-string "failed to parse function")
                            (query-handler/normalize-query-function query-result)
                            (str))
-             f (sci/eval-string fn-string {'editor editor-ns})]
+             f (sci/eval-string fn-string {:namespaces {'editor editor-ns}})]
          (when (fn? f)
            (try (f query-result)
                 (catch :default e
@@ -3101,7 +3101,7 @@
         _ (when-let [query-result (:query-result config)]
             (let [result (remove (fn [b] (some? (get-in b [:block/properties :template]))) result)]
               (reset! query-result result)))
-        view-f (and view-fn (sci/eval-string (pr-str view-fn) {'editor editor-ns}))
+        view-f (and view-fn (sci/eval-string (pr-str view-fn) {:namespaces {'editor editor-ns}}))
         only-blocks? (:block/uuid (first result))
         blocks-grouped-by-page? (and (seq result)
                                      (not not-grouped-by-page?)

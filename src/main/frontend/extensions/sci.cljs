@@ -50,10 +50,11 @@
   [:div
    [:code "Results:"]
    [:div.results.mt-1
-    (let [result (eval-string code {:bindings {'block block}
-                                    :classes {'logseq-api js/logseq.api
-                                              'logseq-gp js/logseq.graph_parser
-                                              :allow :all}})]
+    (let [result (eval-string code {:bindings {'block block
+                                               'logseq-api (fn [type & args] (try
+                                                                               (apply js-invoke (aget js/window.logseq "api") type args)
+                                                                               (catch :default e (js/console.error e))))}
+                                    :classes {:allow :all}})]
       (if (and (vector? result) (:hiccup (meta result)))
         result
         [:pre.code (str result)]))]])

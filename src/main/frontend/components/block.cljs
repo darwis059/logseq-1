@@ -81,8 +81,7 @@
             ;; [frontend.handler.file-sync :as file-sync]
             ;; [clojure.set :as set]
             [shadow.loader :as loader]
-            [sci.core :as scic]
-            [frontend.handler.notification :as notification]))
+            [sci.core :as scic]))
 
 (def fns (scic/create-ns 'editor-ns nil))
 (def editor-ns {'open-block-in-sidebar (scic/copy-var editor-handler/open-block-in-sidebar! fns)
@@ -1256,10 +1255,7 @@
                            (common-handler/safe-read-string "failed to parse function")
                            (query-handler/normalize-query-function query-result)
                            (str))
-             f (sci/eval-string fn-string {:namespaces {'editor editor-ns}
-                                           :classes {'logseq-api js/logseq.api
-                                                     'logseq-gp js/logseq.graph_parser
-                                                     :allow :all}})]
+             f (sci/eval-string fn-string)]
          (when (fn? f)
            (try (f query-result)
                 (catch :default e
@@ -3105,9 +3101,9 @@
             (let [result (remove (fn [b] (some? (get-in b [:block/properties :template]))) result)]
               (reset! query-result result)))
         view-f (and view-fn (sci/eval-string (pr-str view-fn) {:namespaces {'editor editor-ns}
-                                                               :classes {'logseq-api js/logseq.api
-                                                                         'logseq-gp js/logseq.graph_parser
-                                                                         :allow :all}}))
+                                                               :bindings {'logseq-api plugin-handler/invoke-exported-api}
+                                                               :classes {:allow :all}
+                                                               }))
         only-blocks? (:block/uuid (first result))
         blocks-grouped-by-page? (and (seq result)
                                      (not not-grouped-by-page?)
